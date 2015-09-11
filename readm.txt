@@ -1,4 +1,5 @@
-эта папка для проекта
-номер
-5664ы
-
+program lab0;
+var:string;
+write('vvedite ченить');
+read(vvel);
+end.
