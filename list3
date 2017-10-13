@@ -1,0 +1,88 @@
+BOOL IsImpact() 
+{
+	int imp=0;
+	int y;
+	for(int c1=0;c1<4;c1++)
+	{
+		for(int c2=0;c2<4;c2++)
+		{
+			if(g_bFigure[c1][c2])
+			{
+				y=c2;
+				imp=2;
+				if(c2+g_pPozFigure.y+1==VERTICAL_LINE )// Дно
+				{	
+					return TRUE;
+				}
+			}
+		}
+		if(imp==2)
+		{
+			if(g_iStok[c1+g_pPozFigure.x][y+g_pPozFigure.y+1]>30) //Линия
+				return TRUE;
+		}
+		imp=0;
+	}
+	return FALSE;
+}
+
+void LineClear()
+{	
+	BOOL	bLineFill=FALSE;
+	WCHAR	szScore[100];
+	int c1,c2;
+	do
+	{
+		for(c1=0;c1<VERTICAL_LINE;c1++)
+		{
+			for(c2=0;c2<HORIZONTAL_LINE;c2++)
+			{
+				if(g_iStok[c2][c1]>30)
+				{
+					bLineFill=TRUE;
+				}
+				else
+				{
+					bLineFill=FALSE;
+					break;
+				}
+			}
+			if(bLineFill)break;
+			bLineFill=FALSE;
+		}
+		if(bLineFill)
+		{
+			for(;c1>0;c1--)
+			{
+				for(c2=0;c2<HORIZONTAL_LINE;c2++)
+				{
+					g_iStok[c2][c1]=g_iStok[c2][c1-1];
+				}
+			}
+			g_iScore++;
+			wsprintf(szScore,TEXT("Tetris Score:%d"),g_iScore); //Обновляем счёт
+			SetWindowText(g_hwnd,szScore);
+		}
+	}while(bLineFill);
+
+void OnTimer(HWND hwnd, UINT id)
+{
+	if(IsImpact())
+	{
+		KillTimer(g_hwnd,(UINT)NULL);
+		LineClear();
+		NextFigure();
+		PaintNewFigur();
+		if(IsImpact())
+		{
+			KillTimer(g_hwnd,(UINT)NULL);
+			MessageBox(NULL,TEXT("Game Over."),TEXT("Exit"),MB_OK);
+		}
+		else Repaint();
+		return;
+	}
+	EraseOldFigur();
+	if(g_pPozFigure.y<VERTICAL_LINE)g_pPozFigure.y++;
+	PaintNewFigur();
+	DrawStok();
+}
