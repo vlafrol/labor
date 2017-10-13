@@ -1,0 +1,28 @@
+void CopyFigure(BOOL *iSrcArray,BOOL *iDstArray)
+{
+	for(int c1=0;c1<4*4;c1++)
+		*(iDstArray+c1)=*(iSrcArray+c1);
+}
+
+Создаем меню с пояснением
+BOOL OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
+{
+g_hwnd=hwnd;
+
+g_hMenu=CreateMenu();
+HMENU	hMenuPopapFile=CreatePopupMenu();
+AppendMenu(hMenuPopapFile,MF_STRING,ID_MENU_NEW_GAME,TEXT("New game"));-новая игра
+AppendMenu(hMenuPopapFile,MF_STRING,ID_MENU_EXIT,TEXT("Exit"));-выход
+AppendMenu(g_hMenu,MF_POPUP,(UINT)hMenuPopapFile,TEXT("File"));-переход в главное меню
+SetMenu(hwnd,g_hMenu);
+
+	return TRUE;
+}
+
+void OnGetMinMaxInfo(HWND hwnd, LPMINMAXINFO lpMinMaxInfo)
+{
+	lpMinMaxInfo->ptMaxTrackSize.x=SIZE_WINDOW_X;
+	lpMinMaxInfo->ptMaxTrackSize.y=SIZE_WINDOW_Y;
+	lpMinMaxInfo->ptMinTrackSize.x=SIZE_WINDOW_X;
+	lpMinMaxInfo->ptMinTrackSize.y=SIZE_WINDOW_Y;
+}
