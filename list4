@@ -1,0 +1,82 @@
+void MoveRight()
+{
+	int tms=0;
+	int maxim=0;
+	for(int  c1=0;c1<4;c1++)
+	{
+		for(int  c2=0;c2<4;c2++)
+		{
+			if(g_bFigure[c1][c2]==TRUE)tms=c1;
+		}
+		maxim=max(maxim,tms);
+		tms=0;
+	}
+	maxim++;
+	EraseOldFigur();
+	if(g_pPozFigure.x<HORIZONTAL_LINE-maxim)g_pPozFigure.x++;
+	PaintNewFigur();
+	DrawStok();
+}
+
+void MoveLeft()
+{
+	EraseOldFigur();
+	if(g_pPozFigure.x>0)g_pPozFigure.x--;
+	PaintNewFigur();
+	DrawStok();
+}
+
+
+void MoveDown()
+{
+	if(IsImpact())return;
+	EraseOldFigur();
+	if(g_pPozFigure.y<VERTICAL_LINE)g_pPozFigure.y++;
+	PaintNewFigur();
+	DrawStok();
+}
+
+          void Rotate() 
+{	
+	EraseOldFigur();
+	switch(g_iFigure)
+	{
+	case	line:
+		if(g_bFigure[1][0]==TRUE)
+		{
+			ClearFigure(&g_bFigure[0][0]);
+			for(int  c=0;c<4;c++)
+                            g_bFigure[0][c]=TRUE;
+		}
+		else
+		{
+			ClearFigure(&g_bFigure[0][0]);
+			for(int  c=0;c<4;c++)
+				g_bFigure[c][0]=TRUE;
+		}
+		OverRight();
+	case cube:return;
+	}
+	BOOL	tmpFigur[4][4];
+		for(int  c1=0;c1<4;c1++)
+			for(int  c2=0;c2<4;c2++)
+				tmpFigur[c1][c2]=FALSE;
+	for(int  j=2 , c=0; j>=0 ; j-- , c++)
+		for(int i=0; i<3; i++)
+			tmpFigur[c][i]=g_bFigure[i][j];
+	int left=1;
+	for(int  c1=0;c1<4;c1++)
+	{
+		if(tmpFigur[0][c1])
+		{
+			left=0;break;
+		}
+	}
+		ClearFigure(&g_bFigure[0][0]);
+	
+	for(int  f=0; f<3; f++)
+		for(int d=0; d<3; d++)
+		{
+			g_bFigure[f][d]=tmpFigur[f+left][d];
+		}
+	OverRight();}
